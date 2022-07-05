@@ -20,14 +20,14 @@
                     <div class="inputs">
                         <input type="text" id="title" placeholder="Title">
                         <div class="price">
-                            <input type="number" id="price" placeholder="Price">
-                            <input type="number" id="taxes" placeholder="Taxes">
-                            <input type="number" id="ads" placeholder="ads">
-                            <input type="number" id="discount" placeholder="discount">
-                            <small id="total">5720</small>
+                            <input onkeyup="getTotal()" type="number" id="price" placeholder="Price"> <!--whenever you touch these fields run the getTotal method-->
+                            <input  onkeyup="getTotal()" type="number" id="taxes" placeholder="Taxes">
+                            <input onkeyup="getTotal()" type="number" id="ads" placeholder="ads">
+                            <input onkeyup="getTotal()" type="number" id="discount" placeholder="discount">
+                            <small id="total"> </small>
                         </div>
                         <input type="number" id="count" placeholder="count">
-                        <input type="number" id="category" placeholder="category">
+                        <input type="text" id="category" placeholder="category">
                         <button id="submit">Create</button>
                     </div>
                     <div class="outputs">
