@@ -29,33 +29,72 @@ function getTotal()
 }
 //create product
 
-let dataProduct ; //to store the price values in it
-// now i need to store each product data in one object
-if(localStorage.product !== null){
-   dataProduct = Json.parse(localStorage.product); 
+var dataProduct ; // i will store my data in this array to make it easier to retrieve or change the data
+
+// in order to dont lose my old data from local storage when i reload my page
+if(localStorage.dataProduct !== null){
+   dataProduct = JSON.parse(localStorage.product);
 }
 else {
    dataProduct = []; 
 }
 
-submit.onclick = function(){
-let newProduct = {
-   title : title.value,
+submit.onclick = function(){ // submit is the create button so i need an event on click on thet button to collect the data in the array of obj
+let newProduct = { // an obj to store each new product in it to get back for the data easier 
+   title : title.value, // [key:value] pairs represents the product actual data values
    price : price.value ,
    taxes : taxes.value,
    ads : ads.value,
    discount : discount.value,
-   total : total.innerHTML ,// because it is an small tag not an input
+   total : total.innerHTML ,// because it is an small tag not an input tag 
    count : count.value ,
    category : category.value
 }
 dataProduct.push(newProduct)
 localStorage.setItem('product', JSON.stringify(dataProduct)) //parse it to str because local takes only strings as [kay,value]
-console.log(dataProduct);
+// console.log(dataProduct);
+clearData();
+showData();
 }
 
 // clear data in the fields to write new inputs without reloading the package
 
 function clearData() {
+   // to delete the values from the text fields after click on create button 
+   title.value = '',
+   price.value = '' ,
+   taxes.value = '',
+   ads.value = '',
+   discount.value = '',
+   total.innerHTML = '',
+   count.value = '' ,
+   category.value = ''
+}
+
+function showData(){
+// to get the data after click on create button
+  
+// in order to get the data i alredy stored the data in dataProduct array 
+//now i wanna loop thtough it and add the values inside it in the table var below
+   let table ='' ;
+ 
+   for(let i = 0; i< dataProduct.length ; i++){
+table += `  <tr>
+<td> ${i}</td>
+<td> ${dataProduct[i].title}</td>
+<td> ${dataProduct[i].price}</td>
+<td> ${dataProduct[i].taxes}</td>
+<td>${dataProduct[i].ads}</td>
+<td>1${dataProduct[i].discount}</td>
+<td>${dataProduct[i].total}</td>
+<td>${dataProduct[i].category}</td>
+<td> <button id="update">update</button></td>
+<td> <button id="delete">delete</button></td>
+</tr>`;
+   }
+   // now i wanna to call this function outside the function scope to keep showing the data
+   console.log(table);
+ document.getElementById('tbody').innerHTML = table;
+
    
 }
