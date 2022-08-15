@@ -7,7 +7,8 @@ let total = document.getElementById("total");
 let count = document.getElementById("count");
 let category = document.getElementById("category");
 let submit = document.getElementById("submit");
-
+let mode = 'Create';
+let varToSTOREid;
 // console.log(title,price,taxes,ads,discount,count,category,total,submit); //to make sure i have these ids
 
 //Functions
@@ -48,8 +49,9 @@ submit.onclick = () => {
   // add products as many as in the count attribute[add more than one pro at the same time]
 
   // first we need to check thet the count is not empty 
-
-   if(newProduct.count > 1){
+//to solve create/update buttons issues 
+if(mode === 'Create'){
+  if(newProduct.count > 1){
     for(let i =0 ; i< newProduct.count;i++){
       dataProduct.push(newProduct); //create products as many as my count field
     }
@@ -58,6 +60,17 @@ submit.onclick = () => {
     dataProduct.push(newProduct); //just create one product
    }
   
+} 
+//if the button is updete
+else {
+  dataProduct[varToSTOREid]= newProduct;
+  //after we update we want the button to be create again and to show the hidden count field 
+ mode = 'Create';
+ submit.innerHTML='Create'
+ count.style.display= 'block';
+
+}
+   
 
   localStorage.setItem("product", JSON.stringify(dataProduct)); //parse it to str because local takes only strings as [kay,value]
   if (localStorage.product !== null) {
@@ -86,6 +99,7 @@ function clearData() {
 }
 
 function showData() {
+  getData();
   // to get the data after click on create button
 
   // in order to get the data i alredy stored the data in dataProduct array
@@ -102,7 +116,7 @@ function showData() {
 <td>1${dataProduct[i].discount}</td>
 <td>${dataProduct[i].total}</td>
 <td>${dataProduct[i].category}</td>
-<td> <button id="update">update</button></td>
+<td> <button onclick="updateProduct(${i})" id="update">update</button></td>
 <td> <button onclick="deleteOneProduct(${i})" id="delete">delete</button></td> 
 </tr>`;
     //call the delete function here with the event hendler on click
@@ -123,9 +137,9 @@ function showData() {
 
 //delete one product
 
-function deleteOneProduct(i) {
+function deleteOneProduct(id) {
   // passing i as params which is the index of specific product to be deleted
-  dataProduct.pop(i); // TO DELETE THE SPECIFIC PRODUCT
+  dataProduct.pop(id); // TO DELETE THE SPECIFIC PRODUCT
   localStorage.product = JSON.stringify(dataProduct); // to reflect the changes on the local storage also
   showData(); // to reflect the new data status without reload my page again
 }
@@ -134,4 +148,36 @@ function deleteAllProducts() {
   localStorage.clear(); // to clear all the data from local localStorage
   dataProduct.splice(0); //cut/delete all values from 0 to last index
   showData(); // to reflect the changes on the page without reload
+}
+
+
+// update product by id
+function updateProduct(id) {
+
+  //in order to get the values in the table up to the fields to make changes on it
+  title.value = dataProduct[id].title;
+  price.value = dataProduct[id].price; 
+  taxes.value = dataProduct[id].taxes;
+  ads.value = dataProduct[id].ads;
+  discount.value = dataProduct[id].discount;
+  // we need to call the get total function to calculate the total 
+  //we cant do it like the other fields because it needs to enter into the field to work and calculate
+
+  getTotal();
+   //now i need to hide the count field because i dont need it in the updating operation
+   count.style.display = 'none';
+  category.value = dataProduct[id].category;
+
+  // now i want to change the create button into update text 
+  submit.innerHTML ='Update';
+  //now since it is already an create button so it will create a new product for me rather than updating it 
+  // i will solve this by using if conditions
+  mode = 'Update';
+  varToSTOREid = id; //so we can use the index we want outside this function 
+
+  //i want when i click update to automatically go to the fields to update the data
+  scroll({
+    top: 0,
+    behavior: 'smooth'
+  })
 }
